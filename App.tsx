@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { SQLiteProvider } from "expo-sqlite";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
-
 import { useEffect, useState } from "react";
 import { initDatabase, DATABASE_NAME } from "./src/database/db";
 
@@ -29,9 +28,9 @@ export default function App() {
 
   if (!dbLista) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={{ marginTop: 10 }}>Cargando base de datos...</Text>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#FF6B35" />
+        <Text style={styles.loadingText}>Iniciando Cazador de Sabores...</Text>
       </View>
     );
   }
@@ -39,8 +38,14 @@ export default function App() {
   return (
     <SQLiteProvider databaseName={DATABASE_NAME}>
       <NavigationContainer>
-        <StatusBar style="auto" />
-        <Stack.Navigator>
+        <StatusBar style="light" />
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: "#FF6B35" },
+            headerTintColor: "#FFFFFF",
+            headerTitleStyle: { fontWeight: "700" },
+          }}
+        >
           <Stack.Screen
             name="Lista"
             component={ListaScreen}
@@ -58,10 +63,16 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  loadingContainer: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#FFF8F0",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: "#5C3D2E",
+    fontWeight: "600",
   },
 });
