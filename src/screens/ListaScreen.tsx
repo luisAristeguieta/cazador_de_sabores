@@ -31,7 +31,7 @@ export default function ListaScreen({ navigation }: any) {
       );
       setRegistros(resultado);
     } catch (error) {
-      console.error(error);
+      console.error("Error al cargar registros:", error);
     }
   };
 
@@ -53,9 +53,10 @@ export default function ListaScreen({ navigation }: any) {
           style: "destructive",
           onPress: async () => {
             try {
-              await db.runAsync("DELETE FROM registros WHERE id = ?", [id]);
+              await db.runAsync("DELETE FROM registros WHERE id = ?", [Number(id)]);
               cargarRegistros();
             } catch (error) {
+              console.error("Error al eliminar:", error);
               Alert.alert("Error", "No se pudo eliminar el registro");
             }
           },
@@ -66,9 +67,9 @@ export default function ListaScreen({ navigation }: any) {
 
   const handleEdit = (item: Registro) => {
     navigation.navigate("Formulario", {
-      id: item.id,
+      id: Number(item.id),
       tituloActual: item.titulo,
-      calificacionActual: item.calificacion,
+      calificacionActual: Number(item.calificacion),
       comentariosActuales: item.comentarios,
       fotoBase64Actual: item.fotoBase64,
     });

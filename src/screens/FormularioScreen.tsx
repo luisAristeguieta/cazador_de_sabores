@@ -30,7 +30,10 @@ export default function FormularioScreen({ route, navigation }: any) {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
     if (status !== "granted") {
-      return Alert.alert("Permiso necesario", "Se requiere acceso a la cámara para capturar el plato");
+      return Alert.alert(
+        "Permiso necesario",
+        "Se requiere acceso a la cámara para capturar el plato"
+      );
     }
 
     const result = await ImagePicker.launchCameraAsync({
@@ -44,13 +47,24 @@ export default function FormularioScreen({ route, navigation }: any) {
   };
 
   const guardarRegistro = async () => {
-    if (!titulo.trim() || !calificacion.trim() || !comentarios.trim() || !fotoPreview) {
-      return Alert.alert("Campos incompletos", "Por favor completa todos los datos e incluye una fotografía");
+    if (
+      !titulo.trim() ||
+      !calificacion.trim() ||
+      !comentarios.trim() ||
+      !fotoPreview
+    ) {
+      return Alert.alert(
+        "Campos incompletos",
+        "Por favor completa todos los datos e incluye una fotografía"
+      );
     }
 
     const califNumero = parseInt(calificacion, 10);
     if (isNaN(califNumero) || califNumero < 1 || califNumero > 5) {
-      return Alert.alert("Calificación inválida", "La calificación debe ser un valor entero entre 1 y 5");
+      return Alert.alert(
+        "Calificación inválida",
+        "La calificación debe ser un valor entero entre 1 y 5"
+      );
     }
 
     const fechaActual = new Date().toLocaleDateString();
@@ -58,24 +72,34 @@ export default function FormularioScreen({ route, navigation }: any) {
     try {
       if (idEdicion) {
         await db.runAsync(
-          `UPDATE registros 
-           SET titulo = ?, calificacion = ?, comentarios = ?, fotoBase64 = ?, fecha = ? 
-           WHERE id = ?`,
-          [titulo.trim(), califNumero, comentarios.trim(), fotoPreview, fechaActual, idEdicion]
+          "UPDATE registros SET titulo = ?, calificacion = ?, comentarios = ?, fotoBase64 = ?, fecha = ? WHERE id = ?",
+          [
+            titulo.trim(),
+            Number(califNumero),
+            comentarios.trim(),
+            String(fotoPreview),
+            String(fechaActual),
+            Number(idEdicion),
+          ]
         );
         Alert.alert("Éxito", "Registro actualizado correctamente");
       } else {
         await db.runAsync(
-          `INSERT INTO registros (titulo, calificacion, comentarios, fotoBase64, fecha) 
-           VALUES (?, ?, ?, ?, ?)`,
-          [titulo.trim(), califNumero, comentarios.trim(), fotoPreview, fechaActual]
+          "INSERT INTO registros (titulo, calificacion, comentarios, fotoBase64, fecha) VALUES (?, ?, ?, ?, ?)",
+          [
+            titulo.trim(),
+            Number(califNumero),
+            comentarios.trim(),
+            String(fotoPreview),
+            String(fechaActual),
+          ]
         );
         Alert.alert("Éxito", "Sabor guardado con éxito");
       }
 
       navigation.goBack();
     } catch (error) {
-      console.error(error);
+      console.error("Error al persistir registro:", error);
       Alert.alert("Error", "Ocurrió un problema al procesar la operación");
     }
   };
