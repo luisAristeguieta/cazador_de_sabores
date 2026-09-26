@@ -26,6 +26,7 @@ export default function App() {
     preparaDb();
   }, []);
 
+  // Reto 1: Estado de carga mientras SQLite se inicializa
   if (!dbLista) {
     return (
       <View style={styles.loadingContainer}>
@@ -35,6 +36,7 @@ export default function App() {
     );
   }
 
+  // Reto 2 y 3: Envolver con SQLiteProvider y Stack Navigator
   return (
     <SQLiteProvider databaseName={DATABASE_NAME}>
       <NavigationContainer>

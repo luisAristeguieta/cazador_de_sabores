@@ -16,4 +16,7 @@ export const initDatabase = async (): Promise<void> => {
       fecha TEXT NOT NULL
     );
   `);
+
+  // Cerramos la conexión inicial para liberar el archivo al SQLiteProvider
+  await db.closeAsync();
 };

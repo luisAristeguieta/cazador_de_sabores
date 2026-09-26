@@ -38,7 +38,9 @@ export default function FormularioScreen({ route, navigation }: any) {
 
     const result = await ImagePicker.launchCameraAsync({
       base64: true,
-      quality: 0.3,
+      quality: 0.1, // Optimización crítica: reduce el tamaño del base64 para SQLite
+      allowsEditing: true,
+      aspect: [1, 1],
     });
 
     if (!result.canceled && result.assets[0].base64) {
